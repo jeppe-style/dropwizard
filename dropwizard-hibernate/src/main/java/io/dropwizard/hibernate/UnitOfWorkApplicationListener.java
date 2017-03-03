@@ -69,6 +69,9 @@ public class UnitOfWorkApplicationListener implements ApplicationEventListener {
 
         @Override
         public void onEvent(RequestEvent event) {
+
+            System.out.println("UnitOfWorkEventListener.onEvent() " + event.getType().name());
+
             final RequestEvent.Type eventType = event.getType();
             if (eventType == RequestEvent.Type.RESOURCE_METHOD_START) {
                 UnitOfWork unitOfWork = methodMap.get(event.getUriInfo()
@@ -90,6 +93,9 @@ public class UnitOfWorkApplicationListener implements ApplicationEventListener {
 
     @Override
     public void onEvent(ApplicationEvent event) {
+
+        System.out.println("UnitOfWorkApplicationListener.onEvent() " + event.getType().name());
+
         if (event.getType() == ApplicationEvent.Type.INITIALIZATION_APP_FINISHED) {
             for (Resource resource : event.getResourceModel().getResources()) {
                 for (ResourceMethod method : resource.getAllMethods()) {
