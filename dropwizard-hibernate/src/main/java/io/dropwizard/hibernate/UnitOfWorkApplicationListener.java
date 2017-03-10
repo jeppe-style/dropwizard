@@ -70,12 +70,10 @@ public class UnitOfWorkApplicationListener implements ApplicationEventListener {
         @Override
         public void onEvent(RequestEvent event) {
 
-            System.out.println("UnitOfWorkEventListener.onEvent() " + event.getType().name());
-
             final RequestEvent.Type eventType = event.getType();
             if (eventType == RequestEvent.Type.RESOURCE_METHOD_START) {
                 UnitOfWork unitOfWork = methodMap.get(event.getUriInfo()
-                        .getMatchedResourceMethod().getInvocable().getDefinitionMethod());
+                       .getMatchedResourceMethod().getInvocable().getDefinitionMethod());
                 unitOfWorkAspect.beforeStart(unitOfWork);
             } else if (eventType == RequestEvent.Type.RESP_FILTERS_START) {
                 try {
@@ -94,8 +92,6 @@ public class UnitOfWorkApplicationListener implements ApplicationEventListener {
     @Override
     public void onEvent(ApplicationEvent event) {
 
-        System.out.println("UnitOfWorkApplicationListener.onEvent() " + event.getType().name());
-
         if (event.getType() == ApplicationEvent.Type.INITIALIZATION_APP_FINISHED) {
             for (Resource resource : event.getResourceModel().getResources()) {
                 for (ResourceMethod method : resource.getAllMethods()) {
@@ -106,6 +102,8 @@ public class UnitOfWorkApplicationListener implements ApplicationEventListener {
                     for (ResourceMethod method : childResource.getAllMethods()) {
                         registerUnitOfWorkAnnotations(method);
                     }
+
+                    registerResourceLocatorUnitOfWorkAnnotations(childResource.getResourceLocator());
                 }
             }
         }
@@ -125,6 +123,22 @@ public class UnitOfWorkApplicationListener implements ApplicationEventListener {
 
         if (annotation != null) {
             this.methodMap.put(method.getInvocable().getDefinitionMethod(), annotation);
+        }
+
+    }
+
+    private void registerResourceLocatorUnitOfWorkAnnotations(ResourceMethod method) {
+        if (method.getType() != ResourceMethod.JaxrsType.SUB_RESOURCE_LOCATOR)
+            return;
+
+        for (Method responseMethod : method.getInvocable().getRawResponseType().getMethods()) {
+
+            UnitOfWork annotation = responseMethod.getAnnotation(UnitOfWork.class);
+
+            if (annotation != null) {
+                this.methodMap.put(responseMethod, annotation);
+            }
+
         }
 
     }

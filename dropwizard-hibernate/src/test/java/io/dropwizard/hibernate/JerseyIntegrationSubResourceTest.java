@@ -63,7 +63,7 @@ public class JerseyIntegrationSubResourceTest extends JerseyTest {
 
     @Path("/people")
     @Produces(MediaType.APPLICATION_JSON)
-    public static class PersonResource {
+    public class PersonResource {
 
         private final PersonDAO dao;
 
@@ -86,12 +86,12 @@ public class JerseyIntegrationSubResourceTest extends JerseyTest {
 
             @PUT
             @UnitOfWork
+            @Produces(MediaType.APPLICATION_JSON) // needed if throwing exception
             public void save(Person person) {
                 dao.persist(person);
             }
 
         }
-
 
     }
 
