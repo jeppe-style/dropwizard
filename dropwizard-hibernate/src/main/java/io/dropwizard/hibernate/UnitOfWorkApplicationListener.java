@@ -131,14 +131,12 @@ public class UnitOfWorkApplicationListener implements ApplicationEventListener {
         if (method.getType() != ResourceMethod.JaxrsType.SUB_RESOURCE_LOCATOR)
             return;
 
+        UnitOfWork annotation;
         for (Method responseMethod : method.getInvocable().getRawResponseType().getMethods()) {
-
-            UnitOfWork annotation = responseMethod.getAnnotation(UnitOfWork.class);
-
+            annotation = responseMethod.getAnnotation(UnitOfWork.class);
             if (annotation != null) {
                 this.methodMap.put(responseMethod, annotation);
             }
-
         }
 
     }

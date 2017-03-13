@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
  * @author Jesper Findahl (jesper.findahl@usi.ch)
  *         created on 26.02.17.
  */
-public class JerseyIntegrationSubResourceTest extends JerseyTest {
+public class JerseyIntegrationSubResourceLocatorTest extends JerseyTest {
 
     static {
         BootstrapLogging.bootstrap();
