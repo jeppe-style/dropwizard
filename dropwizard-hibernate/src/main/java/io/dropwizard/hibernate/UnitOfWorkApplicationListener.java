@@ -103,7 +103,8 @@ public class UnitOfWorkApplicationListener implements ApplicationEventListener {
                         registerUnitOfWorkAnnotations(method);
                     }
 
-                    registerResourceLocatorUnitOfWorkAnnotations(childResource.getResourceLocator());
+                    if (childResource.getResourceLocator() != null)
+                        registerResourceLocatorUnitOfWorkAnnotations(childResource.getResourceLocator());
                 }
             }
         }
